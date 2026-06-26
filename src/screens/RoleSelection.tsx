@@ -46,9 +46,16 @@ function RoleCard({ role, selected, onSelect }: { role: Role; selected: boolean;
           {role.iconLetter}
         </div>
         <div className="flex-1 min-w-0">
-          <p className={`font-serif-display font-bold text-base mb-1 ${selected ? 'text-amber-900' : 'text-stone-900'}`}>
-            {role.title}
-          </p>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <p className={`font-serif-display font-bold text-base ${selected ? 'text-amber-900' : 'text-stone-900'}`}>
+              {role.title}
+            </p>
+            {selected && (
+              <span className="shrink-0 inline-flex items-center gap-1 bg-amber-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                &#10003; Selected
+              </span>
+            )}
+          </div>
           <p className="text-sm text-stone-600 leading-relaxed mb-2">{role.description}</p>
           <p className="font-serif-display text-xs italic text-stone-500 mb-3">{role.flavour}</p>
           <div className="space-y-1 mb-3">
@@ -74,7 +81,7 @@ export function RoleSelection({ state, dispatch, setScreen }: RoleSelectionProps
   }
 
   return (
-    <div className="screen-enter min-h-screen bg-stone-50">
+    <div className="screen-enter min-h-screen bg-stone-50 pb-24">
       <div className="bg-green-950 px-6 py-8 text-center">
         <h1 className="font-serif-display text-2xl font-bold text-amber-100 mb-1">
           Choose Your Role in 1867
@@ -93,16 +100,22 @@ export function RoleSelection({ state, dispatch, setScreen }: RoleSelectionProps
             />
           ))}
         </div>
+      </div>
 
-        <div className={`mt-8 flex justify-center transition-all duration-300 ${selectedId ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
-          <button
-            onClick={() => { if (state.role) setScreen('character'); }}
-            disabled={!selectedId}
-            className="bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-base py-3 px-10 rounded-lg shadow transition-colors duration-150"
-          >
-            Continue &rarr;
-          </button>
-        </div>
+      {/* Sticky Continue bar */}
+      <div className={`fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 shadow-lg px-4 py-3 flex items-center justify-between gap-4 transition-all duration-300 ${selectedId ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'}`}>
+        <p className="text-sm text-stone-600 truncate">
+          <span className="font-semibold text-amber-700">{state.role?.title}</span>
+          {state.role && <span className="text-stone-400"> — ready to continue</span>}
+        </p>
+        <button
+          type="button"
+          onClick={() => { if (state.role) setScreen('character'); }}
+          disabled={!selectedId}
+          className="shrink-0 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-base py-2.5 px-8 rounded-lg shadow transition-colors duration-150"
+        >
+          Continue &rarr;
+        </button>
       </div>
     </div>
   );

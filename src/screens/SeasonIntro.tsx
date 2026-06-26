@@ -149,15 +149,13 @@ const SEASON_LABELS: Record<SeasonName, string> = {
 
 export function SeasonIntro({ state, dispatch, setScreen }: SeasonIntroProps) {
   const [error, setError] = useState<string | null>(null);
-  const [retrying, setRetrying] = useState(false);
+  const [loading, setLoading] = useState(false);
   const Illustration = ILLUSTRATIONS[state.season];
   const label = SEASON_LABELS[state.season];
 
   async function fetchSituation() {
     setError(null);
-    setRetrying(false);
-    dispatch({ type: 'SET_LOADING', payload: true });
-    setScreen('decision');
+    setLoading(true);
 
     try {
       const res = await fetch('/.netlify/functions/simulate', {
@@ -179,11 +177,10 @@ export function SeasonIntro({ state, dispatch, setScreen }: SeasonIntroProps) {
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data = await res.json();
       dispatch({ type: 'SET_SITUATION', payload: data });
+      setScreen('decision');
     } catch {
-      dispatch({ type: 'SET_LOADING', payload: false });
-      setScreen('seasonIntro');
+      setLoading(false);
       setError('Could not reach the simulation. Please check your connection and try again.');
-      setRetrying(true);
     }
   }
 
@@ -213,10 +210,22 @@ export function SeasonIntro({ state, dispatch, setScreen }: SeasonIntroProps) {
             )}
 
             <button
+              type="button"
               onClick={fetchSituation}
-              className="w-full bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-base py-3.5 rounded-lg shadow transition-colors duration-150"
+              disabled={loading}
+              className="w-full bg-amber-600 hover:bg-amber-700 active:bg-amber-800 disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold text-base py-3.5 rounded-lg shadow transition-colors duration-150 flex items-center justify-center gap-2"
             >
-              {retrying ? 'Try Again' : `Enter ${label} \u2192`}
+              {loading ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                  Loading your situation&hellip;
+                </>
+              ) : (
+                `Enter ${label} \u2192`
+              )}
             </button>
           </div>
         </div>
