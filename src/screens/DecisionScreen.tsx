@@ -44,19 +44,16 @@ export function DecisionScreen({ state, dispatch, setScreen }: DecisionScreenPro
     setScreen('consequence');
 
     try {
-      const res = await fetch('/.netlify/functions/simulate', {
+      const res = await fetch('/.netlify/functions/generate-consequence', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'consequence',
-          gameState: {
-            playerName: state.playerName,
-            roleTitle: state.role?.title ?? '',
-            origin: state.origin,
-            season: state.season,
-            resources: state.resources,
-            history: state.history,
-          },
+          playerName: state.playerName,
+          roleTitle: state.role?.title ?? '',
+          origin: state.origin,
+          season: state.season,
+          resources: state.resources,
+          history: state.history,
           choiceLabel,
           situationNarrative: situation,
         }),

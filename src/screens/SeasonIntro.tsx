@@ -158,19 +158,16 @@ export function SeasonIntro({ state, dispatch, setScreen }: SeasonIntroProps) {
     setLoading(true);
 
     try {
-      const res = await fetch('/.netlify/functions/simulate', {
+      const res = await fetch('/.netlify/functions/generate-situation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'situation',
-          gameState: {
-            playerName: state.playerName,
-            roleTitle: state.role?.title ?? '',
-            origin: state.origin,
-            season: state.season,
-            resources: state.resources,
-            history: state.history,
-          },
+          playerName: state.playerName,
+          roleTitle: state.role?.title ?? '',
+          origin: state.origin,
+          season: state.season,
+          resources: state.resources,
+          history: state.history,
         }),
       });
 
