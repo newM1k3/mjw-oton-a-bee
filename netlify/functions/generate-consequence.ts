@@ -1,9 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { Handler } from '@netlify/functions';
 
 const client = new Anthropic();
 
-const CORS = {
+const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
@@ -57,20 +56,20 @@ Return this exact JSON structure:
 }`;
 }
 
-export const handler: Handler = async (event) => {
+exports.handler = async function (event: { httpMethod: string; body: string | null }) {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: CORS, body: '' };
+    return { statusCode: 200, headers: CORS_HEADERS, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS, body: JSON.stringify({ error: 'Method not allowed' }) };
+    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   try {
     const body = JSON.parse(event.body ?? '{}');
 
     const message = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-opus-4-7',
       max_tokens: 1000,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: buildPrompt(body) }],
@@ -80,13 +79,14 @@ export const handler: Handler = async (event) => {
     const cleaned = rawText.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(cleaned);
 
-    return { statusCode: 200, headers: CORS, body: JSON.stringify(parsed) };
-  } catch (error) {
-    console.error('generate-consequence error:', error);
+    return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify(parsed) };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('generate-consequence error:', message);
     return {
       statusCode: 500,
-      headers: CORS,
-      body: JSON.stringify({ error: 'The simulation encountered an error. Please try again.' }),
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: message }),
     };
   }
 };

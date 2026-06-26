@@ -1,9 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { Handler } from '@netlify/functions';
 
 const client = new Anthropic();
 
-const CORS = {
+const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
@@ -16,11 +15,11 @@ HISTORICAL ACCURACY REQUIREMENTS:
 - Real place names: Otonabee River, Rice Lake, Smith-Ennismore Road, Peterborough, Keene, Bridgenorth, Selwyn, Nassau Mills, Bensfort Bridge, 4th Line, 7th Concession
 - Real context: Ontario Common Schools Act (1850), Baldwin Act (1849), Confederation July 1 1867, Grand Trunk Railway reached Peterborough 1858, the timber trade along the Otonabee, Orange Order presence, Irish Catholic and Protestant settler tensions, Anishinaabe (Mississauga Ojibwe) history along Rice Lake
 - Seasonal accuracy: Upper Canadian farming calendar, period-accurate crops (wheat, oats, potatoes, hay), realistic weather events
-- Economic accuracy: wheat approximately $1/bushel in 1867, barter economy, credit extended by merchants
+- Economic accuracy: wheat approximately $1/bushel in 1867, barter economy alongside cash
 
 WRITING STYLE:
 - Third person limited perspective following the player character
-- Literary and immersive but accessible to Grade 7/8 students (approximately Grade 8 reading level)
+- Literary and immersive but accessible to Grade 7/8 students
 - Period-appropriate vocabulary without being impenetrable
 - No anachronisms under any circumstances
 - Tensions should reflect real historical tensions: settler vs established families, Irish Catholic vs Protestant, emerging municipal politics, role of women, relationships with Indigenous neighbours
@@ -33,21 +32,24 @@ EDUCATIONAL INTEGRITY:
 
 CRITICAL: Respond ONLY with valid JSON. No preamble, no markdown fences, no explanation. Raw JSON only.`;
 
-function buildPrompt(body: Record<string, unknown>): string {
-  const { roleTitle, playerName, origin, season, resources, history } = body as {
-    roleTitle: string;
-    playerName: string;
-    origin: string;
-    season: string;
-    resources: { funds: number; reputation: number; harvest: number; health: number };
-    history: Array<{ season: string; choiceMade: string }>;
-  };
+exports.handler = async function (event: { httpMethod: string; body: string | null }) {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers: CORS_HEADERS, body: '' };
+  }
 
-  const previousDecisions = history.length > 0
-    ? history.map(h => `${h.season}: ${h.choiceMade}`).join('; ')
-    : 'None — this is the first season';
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
 
-  return `Generate a seasonal decision scenario for this player:
+  try {
+    const body = JSON.parse(event.body ?? '{}');
+    const { roleTitle, playerName, origin, season, resources, history } = body;
+
+    const previousDecisions = history?.length > 0
+      ? history.map((h: { season: string; choiceMade: string }) => `${h.season}: ${h.choiceMade}`).join('; ')
+      : 'None — this is the first season';
+
+    const userPrompt = `Generate a seasonal decision scenario for this player:
 
 Name: ${playerName}
 Role: ${roleTitle}
@@ -69,38 +71,26 @@ Return this exact JSON structure:
   ],
   "historicalNote": "1 sentence of genuine historical context"
 }`;
-}
-
-export const handler: Handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: CORS, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS, body: JSON.stringify({ error: 'Method not allowed' }) };
-  }
-
-  try {
-    const body = JSON.parse(event.body ?? '{}');
 
     const message = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-opus-4-7',
       max_tokens: 1200,
       system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: buildPrompt(body) }],
+      messages: [{ role: 'user', content: userPrompt }],
     });
 
     const rawText = message.content[0].type === 'text' ? message.content[0].text : '';
     const cleaned = rawText.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(cleaned);
 
-    return { statusCode: 200, headers: CORS, body: JSON.stringify(parsed) };
-  } catch (error) {
-    console.error('generate-situation error:', error);
+    return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify(parsed) };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('generate-situation error:', message);
     return {
       statusCode: 500,
-      headers: CORS,
-      body: JSON.stringify({ error: 'The simulation encountered an error. Please try again.' }),
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: message }),
     };
   }
 };
