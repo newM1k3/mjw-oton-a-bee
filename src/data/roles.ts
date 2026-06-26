@@ -1,0 +1,58 @@
+import { Role } from '../types/game';
+
+export const roles: Role[] = [
+  {
+    id: 'farmer',
+    title: 'Settler Farmer',
+    description: 'You work 200 acres of cleared and bush land along the Otonabee River. Your family depends on the harvest, the weather, and your neighbours.',
+    flavour: 'The backbone of the township. Your decisions feed families and build community.',
+    startingResources: { funds: 45, reputation: 60, harvest: 70, health: 80 },
+    historicalContext: 'Most Otonabee Township residents in 1867 were mixed farmers of Irish, Scottish, and English descent, many arrived during the 1820s–1840s immigration waves.',
+    iconLetter: 'F',
+  },
+  {
+    id: 'merchant',
+    title: 'General Merchant',
+    description: 'You run a general store on the Smith-Ennismore Road. You extend credit to farmers, trade in local goods, and know everyone\'s business.',
+    flavour: 'The hub of township commerce. Information and credit flow through your counter.',
+    startingResources: { funds: 80, reputation: 65, harvest: 20, health: 70 },
+    historicalContext: 'General merchants in 1860s Peterborough County were critical economic nodes, often serving as informal bankers and post agents for rural communities.',
+    iconLetter: 'M',
+  },
+  {
+    id: 'blacksmith',
+    title: 'Blacksmith',
+    description: 'Your forge serves the whole township. You shoe horses, repair ploughs, and build the iron hardware that keeps farms running.',
+    flavour: 'Every farm needs you. But iron costs money, and fires need feeding.',
+    startingResources: { funds: 55, reputation: 75, harvest: 10, health: 75 },
+    historicalContext: 'Blacksmiths were among the most essential tradespeople in rural Ontario, often located at crossroads settlements alongside grist mills and taverns.',
+    iconLetter: 'B',
+  },
+  {
+    id: 'teacher',
+    title: 'Township Schoolteacher',
+    description: 'You run the one-room common school on the 4th Line. You answer to the school board, the minister, and thirty families with strong opinions.',
+    flavour: 'Education is new and contested. You shape the next generation of Otonabee citizens.',
+    startingResources: { funds: 30, reputation: 70, harvest: 0, health: 85 },
+    historicalContext: 'Ontario\'s Common Schools Act of 1850 established publicly funded schools, but rural teachers in the 1860s were often young, underpaid, and under constant scrutiny from local school sections.',
+    iconLetter: 'T',
+  },
+  {
+    id: 'councillor',
+    title: 'Township Councillor',
+    description: 'You serve on Otonabee Township Council. Roads, bridges, mills, and bylaws — the politics of a young municipality fall to you.',
+    flavour: 'Power and responsibility. Your decisions affect everyone, and everyone has an opinion.',
+    startingResources: { funds: 70, reputation: 55, harvest: 0, health: 70 },
+    historicalContext: 'Otonabee Township was incorporated as a municipal entity under the Baldwin Act of 1849. By 1867, township councils managed roads, local taxation, and infrastructure.',
+    iconLetter: 'C',
+  },
+  {
+    id: 'midwife',
+    title: 'Midwife & Herbalist',
+    description: 'You are the closest thing to a doctor for half the township. You deliver babies, treat injuries, and carry knowledge that the medical establishment doesn\'t recognize.',
+    flavour: 'Trusted by families, tolerated by the church. You walk a careful line.',
+    startingResources: { funds: 25, reputation: 80, harvest: 30, health: 90 },
+    historicalContext: 'Rural Ontario in the 1860s had few trained physicians. Midwives and herbalists provided essential medical care and held significant informal community authority.',
+    iconLetter: 'W',
+  },
+];

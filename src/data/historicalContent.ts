@@ -1,0 +1,40 @@
+import { SeasonName, RoleId } from '../types/game';
+
+export const seasonIntros: Record<SeasonName, string> = {
+  spring: 'The ice on the Otonabee River broke in late March, and by April the mud season had made the concession roads nearly impassable. Across the township, families emerged from a long winter to assess what had been lost and what could be planted. Word had come that Canada was to become a nation this summer — but in Otonabee Township, the more pressing question was whether the spring rains would come in time.',
+  summer: 'Confederation arrived on July 1st with little fanfare in Otonabee Township — a reading of the proclamation at the Orange Hall, some speeches, and back to work. The haying season waited for no holiday. By August the question on every farmer\'s mind was the same as always: would the harvest be enough?',
+  autumn: 'The harvest determined everything, as it always did. By October the results were in, and families were calculating what they could sell, what they needed to keep, and what debts could be settled before the snow fell. The township council met to discuss the road levy, and the debates were the same as every year — only the faces at the table changed.',
+  winter: 'December in Otonabee Township meant wood to be split, fences to be mended, and the long arithmetic of survival. Neighbours gathered more in winter than any other season — the cold made community necessary. This winter, the first of the new Dominion, there was something different in the air: a cautious sense that the world was changing, slowly, and that Otonabee was part of something larger than itself.',
+};
+
+export const historicalReflections: Record<RoleId, string> = {
+  farmer: 'Settler farmers in Otonabee Township in 1867 operated in a world of carefully managed risk. A good harvest meant survival and perhaps a small surplus to sell at the Peterborough market. A bad one meant debt to the merchant and prayers for better weather next year. The Otonabee River provided both a route to market and an occasional threat of flooding. Most farm families were of Irish or Scottish descent, and community ties — through church, Orange Lodge, or simply neighbourly obligation — were the real safety net.',
+  merchant: 'The general merchants of rural Peterborough County were the connective tissue of the local economy. They extended credit through lean seasons, accepted grain and potash in lieu of cash, and served as informal post agents, news distributors, and community anchors. The relationship between merchant and farmer was often one of mutual dependency — and mutual suspicion. A merchant who called in his debts too aggressively could destroy a family; one who was too lenient could destroy himself.',
+  blacksmith: 'The blacksmith\'s forge was one of the first permanent structures in any Ontario settlement, and in 1867 Otonabee Township had several operating at crossroads communities throughout the concessions. Iron had to be imported at considerable expense, and the blacksmith\'s skill determined whether farm equipment survived a season. Many blacksmiths also doubled as farriers, wagon repairers, and general metalworkers — there was rarely enough specialized trade to sustain a single craft.',
+  teacher: 'Under Ontario\'s Common Schools Act of 1850, each school section was governed by three elected trustees who hired the teacher, maintained the building, and collected the rate (a local property tax supplement to the provincial grant). Teachers in rural sections were often young, frequently unqualified, and almost always poorly paid. They boarded with local families, which brought them deep into community life and under constant informal scrutiny. Curriculum emphasized reading, writing, arithmetic, and scripture.',
+  councillor: 'Otonabee Township Council, established under the Baldwin Act of 1849, consisted of a reeve and four councillors elected annually by male property owners. Their responsibilities were largely practical: maintaining roads and bridges, setting the local mill rate, licensing taverns, and managing the pound for stray livestock. Political lines often followed religious and ethnic divisions — Irish Catholic settlements in Ennismore Township sat uneasily alongside Protestant Otonabee — and council meetings could become forums for older grievances.',
+  midwife: 'Women who practiced midwifery and herbalism in rural Ontario in the 1860s occupied an ambiguous social position. They were essential — doctors were expensive, distant, and often less experienced with childbirth than the women they displaced — but their authority was informal and unprotected. The medical licensing push of the late nineteenth century would eventually criminalize much of what they did. In 1867, they still operated largely freely, sustained by the trust of the families they served and carefully managed relationships with local clergy.',
+};
+
+export const whatHappenedNext: Record<RoleId, string> = {
+  farmer: 'Through the 1870s and 1880s, Otonabee Township farms shifted increasingly toward mixed livestock and dairy as wheat prices fell. The Otonabee River valley remained productive farmland. Many of the farm families who survived the 1860s would see their grandchildren leave for the cities by 1910.',
+  merchant: 'The general store model survived in rural Peterborough County well into the twentieth century, though the railway increasingly allowed competition from Peterborough merchants. Those who adapted — adding hardware, farm equipment agencies, or postal contracts — endured. Those who didn\'t were gradually replaced.',
+  blacksmith: 'The coming of agricultural machinery agencies in the 1870s and 1880s changed the blacksmith\'s role significantly. Repair work remained essential, but the craft increasingly specialized. By 1900, the crossroads forge was beginning to give way to larger operations in the county town.',
+  teacher: 'Ontario\'s education system was formalized and standardized through the 1870s under Egerton Ryerson\'s influence. Teacher certification became more rigorous, salaries improved slightly, and the one-room schoolhouse remained the dominant model in Otonabee Township until well into the twentieth century. Several became community institutions lasting over a hundred years.',
+  councillor: 'Municipal politics in Otonabee Township continued to revolve around roads, taxes, and the perennial question of who bore the cost of local infrastructure. Confederation brought new federal funding mechanisms but also new layers of government. The township\'s boundaries and council structure remained largely unchanged until municipal amalgamation in the late twentieth century.',
+  midwife: 'The Medical Act of 1869 and subsequent legislation increasingly regulated and restricted unlicensed medical practice in Ontario. Many rural midwives continued to practice informally for decades, sustained by community trust and the simple absence of alternatives. Their knowledge — much of it highly effective — was largely undocumented and has been only partially recovered by historians.',
+};
+
+export const confederationContext = 'On July 1, 1867, the British North America Act united the Province of Canada, New Brunswick, and Nova Scotia into the Dominion of Canada. For most Otonabee Township residents, Confederation was a distant political event — important, but less immediately pressing than the price of wheat or the state of the roads.';
+
+export const curriculumConnections = [
+  'Ontario Grade 7 Social Studies: "Heritage and Identity: Communities in Canada, 1780–1850"',
+  'Ontario Grade 8 History: "Canada, 1850–1890: Confederation and Its Aftermath"',
+  'Historical Thinking Concepts: Cause and Consequence, Historical Perspective, Ethical Dimension',
+];
+
+export const realPlaceNames = [
+  'Otonabee River', 'Rice Lake', 'Smith-Ennismore Road', 'Peterborough',
+  'Keene', 'Bridgenorth', 'Selwyn', 'Nassau Mills', 'Bensfort Bridge',
+  '4th Line', '7th Concession', 'Ennismore Township', 'Smith Township',
+];
