@@ -163,16 +163,21 @@ export function SeasonIntro({ state, dispatch, setScreen }: SeasonIntroProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           playerName: state.playerName,
+          playerSurname: state.playerSurname,
           roleTitle: state.role?.title ?? '',
           origin: state.origin,
           season: state.season,
           resources: state.resources,
           history: state.history,
+          characters: state.characters,
         }),
       });
 
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data = await res.json();
+      if (data.newCharacters && Object.keys(data.newCharacters).length > 0) {
+        dispatch({ type: 'REGISTER_CHARACTERS', payload: data.newCharacters });
+      }
       dispatch({ type: 'SET_SITUATION', payload: data });
       setScreen('decision');
     } catch {

@@ -8,7 +8,7 @@ const CORS_HEADERS = {
   'Content-Type': 'application/json',
 };
 
-const SYSTEM_PROMPT = `You are the narrative engine for an educational historical simulation set in Otonabee Township, Peterborough County, Ontario, Canada in 1867 — the year of Confederation.
+const BASE_SYSTEM_PROMPT = `You are the narrative engine for an educational historical simulation set in Otonabee Township, Peterborough County, Ontario, Canada in 1867 — the year of Confederation.
 
 HISTORICAL ACCURACY REQUIREMENTS:
 - All content must be factually grounded in real Otonabee Township and Peterborough County history
@@ -43,7 +43,19 @@ exports.handler = async function (event: { httpMethod: string; body: string | nu
 
   try {
     const body = JSON.parse(event.body ?? '{}');
-    const { roleTitle, playerName, origin, season, resources, history } = body;
+    const { roleTitle, playerName, playerSurname, origin, season, resources, history, characters } = body;
+
+    const fullName = playerSurname ? `${playerName} ${playerSurname}` : playerName;
+
+    const characterEntries = characters && Object.keys(characters).length > 0
+      ? Object.keys(characters).length
+      : 0;
+
+    const characterBlock = characterEntries > 0
+      ? `\n\nESTABLISHED CHARACTERS: The following characters have already appeared in this story. Use their exact names and ages — do not change or contradict them: ${JSON.stringify(characters)}`
+      : '';
+
+    const systemPrompt = `${BASE_SYSTEM_PROMPT}\n\nCHARACTER NAME: The player character's name is ${fullName}. Use this exact name every time you refer to the character. Do not invent, alter, or substitute any part of this name.${characterBlock}`;
 
     const previousDecisions = history?.length > 0
       ? history.map((h: { season: string; choiceMade: string }) => `${h.season}: ${h.choiceMade}`).join('; ')
@@ -51,7 +63,7 @@ exports.handler = async function (event: { httpMethod: string; body: string | nu
 
     const userPrompt = `Generate a seasonal decision scenario for this player:
 
-Name: ${playerName}
+Name: ${fullName}
 Role: ${roleTitle}
 Origin: ${origin}
 Current Season: ${season} 1867
@@ -69,13 +81,18 @@ Return this exact JSON structure:
     { "id": "b", "label": "8-12 word choice label", "description": "1 sentence elaboration", "hint": "e.g. Takes a risk" },
     { "id": "c", "label": "8-12 word choice label", "description": "1 sentence elaboration", "hint": "e.g. Cautious approach" }
   ],
-  "historicalNote": "1 sentence of genuine historical context"
-}`;
+  "historicalNote": "1 sentence of genuine historical context",
+  "newCharacters": {
+    "Full Name": { "age": integer, "role": "brief role description e.g. neighbouring farmer" }
+  }
+}
+
+Only include characters you actually introduce by name in the narrative. If no named characters appear, return "newCharacters": {}.`;
 
     const message = await client.messages.create({
-      model: 'claude-opus-4-7',
-      max_tokens: 1200,
-      system: SYSTEM_PROMPT,
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1400,
+      system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
     });
 

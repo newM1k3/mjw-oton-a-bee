@@ -13,6 +13,7 @@ export const initialState: GameState = {
     health: 0,
   },
   history: [],
+  characters: {},
   currentSituation: null,
   currentConsequence: null,
   isLoading: false,

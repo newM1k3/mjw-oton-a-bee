@@ -49,11 +49,13 @@ export function DecisionScreen({ state, dispatch, setScreen }: DecisionScreenPro
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           playerName: state.playerName,
+          playerSurname: state.playerSurname,
           roleTitle: state.role?.title ?? '',
           origin: state.origin,
           season: state.season,
           resources: state.resources,
           history: state.history,
+          characters: state.characters,
           choiceLabel,
           situationNarrative: situation,
         }),
@@ -61,6 +63,9 @@ export function DecisionScreen({ state, dispatch, setScreen }: DecisionScreenPro
 
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data = await res.json();
+      if (data.newCharacters && Object.keys(data.newCharacters).length > 0) {
+        dispatch({ type: 'REGISTER_CHARACTERS', payload: data.newCharacters });
+      }
       dispatch({ type: 'SET_CONSEQUENCE', payload: data });
     } catch {
       dispatch({ type: 'SET_LOADING', payload: false });

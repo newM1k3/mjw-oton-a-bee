@@ -25,11 +25,20 @@ export interface Choice {
   hint: string;
 }
 
+export interface NpcCharacter {
+  age: number;
+  role: string;
+  introduced: SeasonName;
+}
+
+export type CharacterRegistry = Record<string, NpcCharacter>;
+
 export interface AISituation {
   narrative: string;
   situation: string;
   choices: Choice[];
   historicalNote: string;
+  newCharacters?: CharacterRegistry;
 }
 
 export interface AIConsequence {
@@ -38,6 +47,7 @@ export interface AIConsequence {
   resourceDelta: ResourceDelta;
   historicalConnection: string;
   lookingAhead: string;
+  newCharacters?: CharacterRegistry;
 }
 
 export interface TurnRecord {
@@ -66,6 +76,7 @@ export interface GameState {
   season: SeasonName;
   resources: Resources;
   history: TurnRecord[];
+  characters: CharacterRegistry;
   currentSituation: AISituation | null;
   currentConsequence: AIConsequence | null;
   isLoading: boolean;

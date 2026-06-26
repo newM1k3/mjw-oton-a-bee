@@ -1,4 +1,4 @@
-import { GameState, Role, SeasonName, ChoiceId, AISituation, AIConsequence, TurnRecord } from '../types/game';
+import { GameState, Role, SeasonName, ChoiceId, AISituation, AIConsequence, TurnRecord, CharacterRegistry } from '../types/game';
 
 export type GameAction =
   | { type: 'SET_CLASSROOM_MODE'; payload: boolean }
@@ -11,7 +11,8 @@ export type GameAction =
   | { type: 'SELECT_CHOICE'; payload: ChoiceId }
   | { type: 'SET_CONSEQUENCE'; payload: AIConsequence }
   | { type: 'ADVANCE_SEASON' }
-  | { type: 'RESET_GAME' };
+  | { type: 'RESET_GAME' }
+  | { type: 'REGISTER_CHARACTERS'; payload: CharacterRegistry };
 
 const SEASON_ORDER: SeasonName[] = ['spring', 'summer', 'autumn', 'winter'];
 
@@ -40,6 +41,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         season: 'spring',
         resources: { ...state.role.startingResources },
         history: [],
+        characters: {},
         currentSituation: null,
         currentConsequence: null,
         selectedChoiceId: null,
@@ -99,6 +101,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'REGISTER_CHARACTERS':
+      // Existing entries win — incoming payload is spread first, state.characters overwrites
+      return { ...state, characters: { ...action.payload, ...state.characters } };
+
     case 'RESET_GAME':
       return {
         ...state,
@@ -109,6 +115,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         season: 'spring',
         resources: { funds: 0, reputation: 0, harvest: 0, health: 0 },
         history: [],
+        characters: {},
         currentSituation: null,
         currentConsequence: null,
         isLoading: false,
